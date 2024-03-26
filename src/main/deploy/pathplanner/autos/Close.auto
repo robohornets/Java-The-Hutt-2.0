@@ -1,0 +1,61 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.6919191384679068,
+      "y": 4.377578810713177
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Close 2nd Note Get"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Close 2nd Note Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Close 3rd Note Get"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Close 3rd Note Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Close 4th Note Get"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Close 4th Note Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Close Drive Out"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

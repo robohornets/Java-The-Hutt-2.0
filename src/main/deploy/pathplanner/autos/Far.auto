@@ -1,0 +1,55 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.6939555136253127,
+      "y": 4.4049105555353965
+    },
+    "rotation": 119.55663032771979
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Far 2nd Note Get"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Far 2nd Note Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Far 3rd Note Get"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Far 3rd Note Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Far 4th Note Get"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Far 4th Note Shoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
