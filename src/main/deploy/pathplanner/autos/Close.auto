@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6919191384679068,
-      "y": 4.377578810713177
+      "x": 1.3580709603156493,
+      "y": 5.551377298022958
     },
-    "rotation": 0
+    "rotation": 179.6737077229162
   },
   "command": {
     "type": "sequential",
@@ -45,12 +45,6 @@
           "type": "path",
           "data": {
             "pathName": "Close 4th Note Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Close Drive Out"
           }
         }
       ]
