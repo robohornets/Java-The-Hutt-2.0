@@ -9,18 +9,20 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.generated.TunerConstants;
+import frc.robot.utilities.WiiRemote;
 
 public class RobotContainer {
   private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   /* Setting up bindings for necessary control of the swerve drive platform */
-  private final CommandXboxController joystick = new CommandXboxController(0);
-  private final CommandXboxController joystick2 = new CommandXboxController(1);
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -37,48 +39,43 @@ public class RobotContainer {
 
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
-  private void configureBindings() {
-    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftX() * 10)
-            .withVelocityY(joystick.getLeftY() * 10)
-            .withRotationalRate(-joystick.getRightX() * MaxAngularRate)
-        ).ignoringDisable(false));
-
-    //     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-		// 	drivetrain.applyRequest(
-		// 		() -> {
-		// 			drive
-    //       .withVelocityX(-joystick.getLeftY() * TunerConstants.kSpeedAt12VoltsMps)
-		// 				.withVelocityY(-joystick.getLeftX() * TunerConstants.kSpeedAt12VoltsMps)
-		// 				.withRotationalRate(-joystick.getRightX() * MaxAngularRate);
-    //     }
-		// 	)
-		// );
-
-    //joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-    //joystick.b().whileTrue(drivetrain
-    //    .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
-
-    // reset the field-centric heading on y button press
-    joystick.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-
-    drivetrain.registerTelemetry(logger::telemeterize);
-
-    //joystick.pov(0).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0.5).withVelocityY(0)));
-    //joystick.pov(180).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
+  public static Joystick driver;
+  public static Joystick operator;
+  
+  public static JoystickButton redButton;
+  public static JoystickButton blueButton;
+  public static JoystickButton yellowButton;
+  public static JoystickButton greenButton;
+  public static WiiRemote wiiRemote = new WiiRemote(0);
 
 
-    /* Bindings for drivetrain characterization */
-    /* These bindings require multiple buttons pushed to swap between quastatic and dynamic */
-    /* Back/Start select dynamic/quasistatic, Y/X select forward/reverse direction */
-    joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-    joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-    joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-    joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-  }
+
+  public static double rotationManager = 0.0;
+
+
+
 
   public RobotContainer() {
-    configureBindings();
+    
+
+    
+
+    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+        drivetrain.applyRequest(() -> drive.withVelocityX(wiiRemote.getRawAxis(4) * MaxSpeed)
+                      .withVelocityY(wiiRemote.getRawAxis(0) * MaxSpeed)
+                      .withRotationalRate(-wiiRemote.getRawAxis(8) * MaxAngularRate))
+        .ignoringDisable(false));
+
+   // operator = new Joystick(1);
+
+    
+    
+    // redButton = new JoystickButton(operator, 2);
+    // blueButton = new JoystickButton(operator, 3);
+    // greenButton = new JoystickButton(operator, 1);
+    // yellowButton = new JoystickButton(operator, 4);
+    drivetrain.registerTelemetry(logger::telemeterize);
+
   }
 
   public Command getAutonomousCommand() {
