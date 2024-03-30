@@ -4,7 +4,13 @@
 
 package frc.robot;
 
+import java.util.Optional;
+
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,11 +23,30 @@ public class Robot extends TimedRobot {
 
   private final boolean UseLimelight = false;
 
+    public static AddressableLED m_led = new AddressableLED(9);
+  public static AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(512);
+  public static AddressableLEDBuffer amp_ledBuffer = new AddressableLEDBuffer(512);
+  public static AddressableLEDBuffer speaker_ledBuffer = new AddressableLEDBuffer(512);
+
+  int timeCounter = 1;
+  int loopNumber = 0;
+
+  Optional<Alliance> ally = DriverStation.getAlliance();
+
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
 
     m_robotContainer.drivetrain.getDaqThread().setThreadPriority(99);
+
+    m_led.setLength(m_ledBuffer.getLength());
+
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+      m_ledBuffer.setRGB(i, ledArrangements.hornet1209[i][0], ledArrangements.hornet1209[i][1], ledArrangements.hornet1209[i][2]);
+    }
+
+    m_led.setData(m_ledBuffer);
+    m_led.start();
   }
   @Override
   public void robotPeriodic() {
@@ -65,7 +90,28 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    if (timeCounter % 50 == 0) {
+      m_led.setLength(m_ledBuffer.getLength());
+
+      for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+        // Sets the specified LED to the RGB values for red
+        m_ledBuffer.setRGB(i, theHutt.javaTheHutt[loopNumber][i][0], theHutt.javaTheHutt[loopNumber][i][1], theHutt.javaTheHutt[loopNumber][i][2]);
+      }
+
+      m_led.setData(m_ledBuffer);
+
+      m_led.start();
+
+      if (loopNumber < 2) {
+        loopNumber += 1;
+      } else {
+        loopNumber = 0;
+      }
+    }
+    
+    timeCounter++;
+  }
 
   @Override
   public void autonomousExit() {}
@@ -78,7 +124,43 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    if (timeCounter % 200 == 0) {
+      m_led.setLength(m_ledBuffer.getLength());
+
+      if (loopNumber == 4) {
+        //if (alliance == "red") {
+        if (ally.get() == Alliance.Red) {
+          for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+            // Sets the specified LED to the RGB values for red
+            m_ledBuffer.setRGB(i, ledArrangements.redAlliance[i][0], ledArrangements.redAlliance[i][1], ledArrangements.redAlliance[i][2]);
+          }
+        } else {
+          for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+            // Sets the specified LED to the RGB values for red
+            m_ledBuffer.setRGB(i, ledArrangements.blueAlliance[i][0], ledArrangements.blueAlliance[i][1], ledArrangements.blueAlliance[i][2]);
+          }
+        } 
+      } else {
+        for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+          // Sets the specified LED to the RGB values for red
+          m_ledBuffer.setRGB(i, ledArrangements.cycleArray[loopNumber][i][0], ledArrangements.cycleArray[loopNumber][i][1], ledArrangements.cycleArray[loopNumber][i][2]);
+        }
+      }
+
+      m_led.setData(m_ledBuffer);
+
+      m_led.start();
+
+      if (loopNumber < 4) {
+        loopNumber += 1;
+      } else {
+        loopNumber = 0;
+      }
+    }
+    
+    timeCounter++;
+  }
 
   @Override
   public void teleopExit() {
