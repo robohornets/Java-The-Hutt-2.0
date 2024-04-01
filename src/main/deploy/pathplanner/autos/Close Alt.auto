@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3580709603156493,
-      "y": 5.551377298022958
+      "x": 0.7392002370702815,
+      "y": 6.649971758981609
     },
-    "rotation": 179.6737077229162
+    "rotation": -116.61397816402484
   },
   "command": {
     "type": "sequential",
@@ -14,43 +14,43 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Close 2nd Note Get"
+            "pathName": "Close Alt 2nd Note Get"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Close 2nd Note Shoot"
+            "pathName": "Close Alt 2nd Note Shoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Close 3rd Note Get"
+            "pathName": "Close Alt 3rd Note Get"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Close 3rd Note Shoot"
+            "pathName": "Close Alt 3rd Note Shoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Close 4th Note Get"
+            "pathName": "Close Alt 4th Note Get"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Close 4th Note Shoot"
+            "pathName": "Close Alt 4th Note Shoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Close Drive Out"
+            "pathName": "Close Alt Drive Out"
           }
         }
       ]

@@ -23,7 +23,7 @@ public class Robot extends TimedRobot {
 
   private final boolean UseLimelight = false;
 
-    public static AddressableLED m_led = new AddressableLED(9);
+  public static AddressableLED m_led = new AddressableLED(9);
   public static AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(512);
   public static AddressableLEDBuffer amp_ledBuffer = new AddressableLEDBuffer(512);
   public static AddressableLEDBuffer speaker_ledBuffer = new AddressableLEDBuffer(512);
