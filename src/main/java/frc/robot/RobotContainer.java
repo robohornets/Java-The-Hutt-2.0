@@ -5,18 +5,44 @@
 package frc.robot;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.generated.TunerConstants;
 
 public class RobotContainer {
+  public static ShuffleboardTab botSettingsTab = Shuffleboard
+            .getTab("Bot Settings");
+
   private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
+
+  public static TalonFX shooterAngle = new TalonFX(21);
+  public static TalonFX shooterFeed = new TalonFX(20);
+  public static TalonFX shooter1 = new TalonFX(22);
+  public static TalonFX shooter2 = new TalonFX(23);
+  public static TalonFX shooter3 = new TalonFX(24);
+  public static TalonFX shooter4 = new TalonFX(25);
+
+  public static TalonFX intakeAngle = new TalonFX(26);
+  public static TalonFX intake1 = new TalonFX(27);
+  public static TalonFX intake2 = new TalonFX(28);
+
+
+  public static Command shootCommand = Eve.shoot(shooter1, shooter2, shooter3, shooter4);
+  
 
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final CommandXboxController joystick = new CommandXboxController(0);
@@ -24,65 +50,76 @@ public class RobotContainer {
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
-                                                               // driving in open loop
+      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1)
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
   /* Path follower */
-  // private Command runAuto = drivetrain.getAutoPath("Close");
-  private Command runAuto = drivetrain.getAutoPath("Far");
+  private Command runAuto = drivetrain.getAutoPath("Close");
+  //private Command runAuto = drivetrain.getAutoPath("Far");
 
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
+  public static ShuffleboardLayout ampList = Shuffleboard
+            .getTab("Bot Settings")
+            .getLayout("Amp", BuiltInLayouts.kList)
+            .withSize(2, 3)
+            .withPosition(4, 0);
+
   private void configureBindings() {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftX() * 10)
-            .withVelocityY(joystick.getLeftY() * 10)
+        drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftX() * TunerConstants.kSpeedAt12VoltsMps)
+            .withVelocityY(joystick.getLeftY() * TunerConstants.kSpeedAt12VoltsMps)
             .withRotationalRate(-joystick.getRightX() * MaxAngularRate)
         ).ignoringDisable(false));
-
-    //     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-		// 	drivetrain.applyRequest(
-		// 		() -> {
-		// 			drive
-    //       .withVelocityX(-joystick.getLeftY() * TunerConstants.kSpeedAt12VoltsMps)
-		// 				.withVelocityY(-joystick.getLeftX() * TunerConstants.kSpeedAt12VoltsMps)
-		// 				.withRotationalRate(-joystick.getRightX() * MaxAngularRate);
-    //     }
-		// 	)
-		// );
-
-    //joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-    //joystick.b().whileTrue(drivetrain
-    //    .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
 
     // reset the field-centric heading on y button press
     joystick.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
+    joystick2.a()
+    .whileTrue(
+      //Eve.shootAngleTime(shooterAngle)
+      Eve.shootAnglePotentiometer(shooterAngle, 20.0, pot)
+    );
+
+    joystick2.rightBumper()
+    .whileTrue(
+      Eve.shooterFeed(shooterFeed)
+    );
+
+    joystick2.y()
+    .whileTrue(
+      Eve.shoot(shooter1, shooter2, shooter3, shooter4)
+    );
+
     drivetrain.registerTelemetry(logger::telemeterize);
-
-    //joystick.pov(0).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0.5).withVelocityY(0)));
-    //joystick.pov(180).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
-
-
-    /* Bindings for drivetrain characterization */
-    /* These bindings require multiple buttons pushed to swap between quastatic and dynamic */
-    /* Back/Start select dynamic/quasistatic, Y/X select forward/reverse direction */
-    joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-    joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-    joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-    joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
   }
+
+  AnalogPotentiometer pot;
 
   public RobotContainer() {
     configureBindings();
+    pot = new AnalogPotentiometer(3, 270, -64);
   }
 
   public Command getAutonomousCommand() {
     /* First put the drivetrain into auto run mode, then run the auto */
-    return runAuto;
+    //return runAuto;
+    return m_chooser.getSelected();
   }
+
+  private final SendableChooser<Command> m_chooser = new SendableChooser<>();
+
+  public void onInit() {
+		m_chooser.setDefaultOption("Close", drivetrain.getAutoPath("Close"));
+		m_chooser.addOption("Close Side", drivetrain.getAutoPath("Close Alt"));
+		m_chooser.addOption("Far", drivetrain.getAutoPath("Far"));
+
+		Shuffleboard
+				.getTab("Bot Settings")
+				.add("Autonomous Options", m_chooser)
+				.withSize(2, 1); 
+	}
 }
