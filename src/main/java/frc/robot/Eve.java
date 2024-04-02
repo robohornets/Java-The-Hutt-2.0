@@ -95,8 +95,33 @@ public class Eve {
           }).withTimeout(0.0)).withName("shoot");
   }
 
-  public static Command shooterFeed(TalonFX shooterFeed) {
-            
+  public static Command startShoot(TalonFX shooter1, TalonFX shooter2, TalonFX shooter3,
+      TalonFX shooter4) {
+        return Commands.sequence(
+        Commands.run(
+          () -> {
+              shooter1.set(-0.8);
+              shooter2.set(-0.8);
+              shooter3.set(-0.8);
+              shooter4.set(-0.8);
+              print("Starting Shooter");
+          }).withTimeout(0.1)).withName("shootStart");
+  }
+
+  public static Command endShoot(TalonFX shooter1, TalonFX shooter2, TalonFX shooter3,
+      TalonFX shooter4) {
+        return Commands.sequence(
+        Commands.run(
+          () -> {
+              shooter1.set(0.0);
+              shooter2.set(0.0);
+              shooter3.set(0.0);
+              shooter4.set(0.0);
+              print("Ending Shooter");
+          }).withTimeout(0.0)).withName("shootEnd");
+  }
+
+  public static Command shooterFeedAuto(TalonFX shooterFeed) {
         return Commands.sequence(
         Commands.run(
           () -> {
@@ -104,12 +129,30 @@ public class Eve {
           }).withTimeout(0.0),
         Commands.run(
           () -> {
+            print("Feeding to shooter");
               shooterFeed.set(0.8);
-          }).withTimeout(3.0),
+          }).withTimeout(1.0),
         Commands.run(
           () -> {
               shooterFeed.set(0.0);
-          }).withTimeout(0.0));
+          }).withTimeout(0.0)).withName("shootFeed");
+  }
+
+  public static void print(String content) {
+    java.lang.System.out.println(content);
+  }
+
+    public static Command shooterFeed(TalonFX shooterFeed) {
+            
+        return Commands.sequence(
+        Commands.run(
+          () -> {
+              shooterFeed.set(0.0);
+          }),
+        Commands.run(
+          () -> {
+              shooterFeed.set(0.8);
+          }));
   }
 
   public static Command intakeDown(TalonFX intakeAngle) {
@@ -148,11 +191,12 @@ public class Eve {
           }));//.withTimeout(0.0));
   }
 
-    public static Command intakeIn(TalonFX intake1, TalonFX intake2, GenericEntry MaxShooterSpeedTop, GenericEntry MaxShooterSpeedBottom, GenericEntry AutoDriveTime) {
+    public static Command intakeIn(TalonFX intake1, TalonFX intake2) {
             
         return Commands.sequence(
         Commands.run(
           () -> {
+            print("Starting intake");
               intake1.set(0.0);
               intake2.set(0.0);
           }).withTimeout(0.0),
@@ -160,11 +204,12 @@ public class Eve {
           () -> {
               intake1.set(0.8);
               intake2.set(0.8);
-          }).withTimeout(3.0),
+          }).withTimeout(2.0),
         Commands.run(
           () -> {
               intake1.set(0.0);
               intake2.set(0.0);
+              print("Intake done");
           }).withTimeout(0.0));
   }
 

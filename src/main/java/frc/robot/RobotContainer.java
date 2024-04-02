@@ -7,6 +7,7 @@ package frc.robot;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -42,7 +43,6 @@ public class RobotContainer {
 
 
   public static Command shootCommand = Eve.shoot(shooter1, shooter2, shooter3, shooter4);
-  
 
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final CommandXboxController joystick = new CommandXboxController(0);
@@ -55,6 +55,8 @@ public class RobotContainer {
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+
+  
 
   /* Path follower */
   private Command runAuto = drivetrain.getAutoPath("Close");
@@ -100,6 +102,12 @@ public class RobotContainer {
   AnalogPotentiometer pot;
 
   public RobotContainer() {
+    NamedCommands.registerCommand("shoot", Eve.shoot(shooter1, shooter2, shooter3, shooter4));
+    NamedCommands.registerCommand("shootStart", Eve.startShoot(shooter1, shooter2, shooter3, shooter4));
+    NamedCommands.registerCommand("shootEnd", Eve.endShoot(shooter1, shooter2, shooter3, shooter4));
+    NamedCommands.registerCommand("runIntake", Eve.intakeIn(intake1, intake2));
+    NamedCommands.registerCommand("shootFeed", Eve.shooterFeedAuto(shooterFeed));
+    
     configureBindings();
     pot = new AnalogPotentiometer(3, 270, -64);
   }
