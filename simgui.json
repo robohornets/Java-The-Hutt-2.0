@@ -1,5 +1,12 @@
 {
   "HALProvider": {
+    "Addressable LEDs": {
+      "0": {
+        "columns": 32,
+        "order": 1,
+        "serpentine": true
+      }
+    },
     "Other Devices": {
       "window": {
         "visible": false
@@ -10,6 +17,7 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/Pose": "Field2d",
+      "/Shuffleboard/Bot Settings/Autonomous Options": "String Chooser",
       "/SmartDashboard/Module 0": "Mechanism2d",
       "/SmartDashboard/Module 1": "Mechanism2d",
       "/SmartDashboard/Module 2": "Mechanism2d",
@@ -28,6 +36,11 @@
         },
         "top": 79,
         "width": 16.541748046875,
+        "window": {
+          "visible": true
+        }
+      },
+      "/Shuffleboard/Bot Settings/Autonomous Options": {
         "window": {
           "visible": true
         }

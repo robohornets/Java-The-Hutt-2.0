@@ -11,7 +11,10 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -20,11 +23,14 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.generated.TunerConstants;
 
 public class RobotContainer {
+  public static ShuffleboardTab botSettingsTab = Shuffleboard
+            .getTab("Bot Settings");
+
   private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
-  public static TalonFX shooterAngle = new TalonFX(20);
-  public static TalonFX shooterPush = new TalonFX(21);
+  public static TalonFX shooterAngle = new TalonFX(21);
+  public static TalonFX shooterFeed = new TalonFX(20);
   public static TalonFX shooter1 = new TalonFX(22);
   public static TalonFX shooter2 = new TalonFX(23);
   public static TalonFX shooter3 = new TalonFX(24);
@@ -35,7 +41,7 @@ public class RobotContainer {
   public static TalonFX intake2 = new TalonFX(28);
 
 
-  public static Command shootCommand = Eve.shoot(shooter1, shooter2, shooter3, shooter4, null, null, null);
+  public static Command shootCommand = Eve.shoot(shooter1, shooter2, shooter3, shooter4);
   
 
   /* Setting up bindings for necessary control of the swerve drive platform */
@@ -56,6 +62,12 @@ public class RobotContainer {
 
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
+  public static ShuffleboardLayout ampList = Shuffleboard
+            .getTab("Bot Settings")
+            .getLayout("Amp", BuiltInLayouts.kList)
+            .withSize(2, 3)
+            .withPosition(4, 0);
+
   private void configureBindings() {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftX() * TunerConstants.kSpeedAt12VoltsMps)
@@ -66,14 +78,20 @@ public class RobotContainer {
     // reset the field-centric heading on y button press
     joystick.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
+    joystick2.a()
+    .whileTrue(
+      //Eve.shootAngleTime(shooterAngle)
+      Eve.shootAnglePotentiometer(shooterAngle, 20.0, pot)
+    );
+
+    joystick2.rightBumper()
+    .whileTrue(
+      Eve.shooterFeed(shooterFeed)
+    );
 
     joystick2.y()
     .whileTrue(
-      Commands.run(
-        () -> {
-
-        }
-      )
+      Eve.shoot(shooter1, shooter2, shooter3, shooter4)
     );
 
     drivetrain.registerTelemetry(logger::telemeterize);
@@ -101,7 +119,7 @@ public class RobotContainer {
 
 		Shuffleboard
 				.getTab("Bot Settings")
-				.add("Autonomous", m_chooser)
-				.withSize(2, 1);
+				.add("Autonomous Options", m_chooser)
+				.withSize(2, 1); 
 	}
 }

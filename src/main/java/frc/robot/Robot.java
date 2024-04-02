@@ -47,6 +47,8 @@ public class Robot extends TimedRobot {
 
     m_led.setData(m_ledBuffer);
     m_led.start();
+
+    m_robotContainer.onInit();
   }
   @Override
   public void robotPeriodic() {
