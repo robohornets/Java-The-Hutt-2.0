@@ -131,21 +131,21 @@ public class Eve {
           })).withName("shootAngle");
   }
 
-  public static Command shootAngleTime(TalonFX intakeAngle, GenericEntry MaxShooterSpeedTop, GenericEntry MaxShooterSpeedBottom, GenericEntry AutoDriveTime) {
+  public static Command shootAngleTime(TalonFX shooterAngle, GenericEntry MaxShooterSpeedTop, GenericEntry MaxShooterSpeedBottom, GenericEntry AutoDriveTime) {
             
         return Commands.sequence(
         Commands.run(
           () -> {
-              intakeAngle.set(0.0);
+              shooterAngle.set(0.0);
           }
         ),
         Commands.run(
           () -> {
-              intakeAngle.set(-0.8);
+              shooterAngle.set(-0.8);
           }).withTimeout(3.0),
         Commands.run(
           () -> {
-              intakeAngle.set(0.0);
-          }).withTimeout(0.0)).withName("intakeDown");
+              shooterAngle.set(0.0);
+          }).withTimeout(0.0));
   }
 }
