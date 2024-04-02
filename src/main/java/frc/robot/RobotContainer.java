@@ -51,8 +51,8 @@ public class RobotContainer {
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
   /* Path follower */
-  // private Command runAuto = drivetrain.getAutoPath("Close");
-  private Command runAuto = drivetrain.getAutoPath("Far");
+  private Command runAuto = drivetrain.getAutoPath("Close");
+  //private Command runAuto = drivetrain.getAutoPath("Far");
 
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
