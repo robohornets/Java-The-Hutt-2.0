@@ -52,27 +52,27 @@
     },
     {
       "waypointRelativePos": 1,
-      "rotationDegrees": 88.60650904673173,
+      "rotationDegrees": -91.38999999999999,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 179.68944528179247,
+    "rotation": -1.2569830342932973,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 88.20853923083699,
+    "rotation": -91.22874127253148,
     "velocity": 0
   },
   "useDefaultConstraints": true

@@ -5,12 +5,18 @@
       "x": 1.3580709603156493,
       "y": 5.551377298022958
     },
-    "rotation": 179.6737077229162
+    "rotation": 0.8335801286279838
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
         {
           "type": "path",
           "data": {
@@ -21,6 +27,12 @@
           "type": "path",
           "data": {
             "pathName": "Close 2nd Note Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
           }
         },
         {
@@ -36,6 +48,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Close 4th Note Get"
@@ -45,6 +63,12 @@
           "type": "path",
           "data": {
             "pathName": "Close 4th Note Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
           }
         },
         {
