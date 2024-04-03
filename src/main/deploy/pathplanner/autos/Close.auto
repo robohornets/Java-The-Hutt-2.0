@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot"
+            "name": "shootStart"
           }
         },
         {
@@ -32,7 +32,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot"
+            "name": "shootFeed"
           }
         },
         {
@@ -50,7 +50,7 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot"
+            "name": "shootFeed"
           }
         },
         {
@@ -68,13 +68,19 @@
         {
           "type": "named",
           "data": {
-            "name": "shoot"
+            "name": "shootFeed"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Close Drive Out"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootEnd"
           }
         }
       ]
