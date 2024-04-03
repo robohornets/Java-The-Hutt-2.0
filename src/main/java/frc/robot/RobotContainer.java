@@ -72,34 +72,125 @@ public class RobotContainer {
 
   private void configureBindings() {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftX() * TunerConstants.kSpeedAt12VoltsMps)
-            .withVelocityY(joystick.getLeftY() * TunerConstants.kSpeedAt12VoltsMps)
+        drivetrain.applyRequest(() -> drive.withVelocityX(joystick.getLeftY() * TunerConstants.kSpeedAt12VoltsMps)
+            .withVelocityY(joystick.getLeftX() * TunerConstants.kSpeedAt12VoltsMps)
             .withRotationalRate(-joystick.getRightX() * MaxAngularRate)
         ).ignoringDisable(false));
 
     // reset the field-centric heading on y button press
     joystick.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
-    joystick2.a()
+    joystick2.leftTrigger()
+    .onTrue(
+      Commands.run(
+        () -> {
+          shooterAngle.set(0.0);
+        }
+      )
+    )
     .whileTrue(
       //Eve.shootAngleTime(shooterAngle)
-      Eve.shootAnglePotentiometer(shooterAngle, 20.0, pot)
+      //Eve.shootAnglePotentiometer(shooterAngle, 20.0, Robot.pot)
+      Eve.shootAngle(shooterAngle)
     );
 
-    joystick2.rightBumper()
+    joystick2.rightTrigger()
+    .onTrue(
+      Commands.run(
+        () -> {
+          shooterAngle.set(0.0);
+        }
+      )
+    )
+    .whileTrue(
+      //Eve.shootAngleTime(shooterAngle)
+      //Eve.shootAnglePotentiometer(shooterAngle, 20.0, Robot.pot)
+      Eve.shootAngleDown(shooterAngle)
+    );
+
+    joystick2.a()
+    .onTrue(
+      Commands.run(
+        () -> {
+          intake1.set(0.0);
+        }
+        )
+    )
+    .whileTrue(
+      Eve.intakeIn(intake1)
+    );
+
+    joystick2.x()
+    .onTrue(
+      Commands.run(
+        () -> {
+          shooterFeed.set(0.0);
+        }
+      )
+    )
     .whileTrue(
       Eve.shooterFeed(shooterFeed)
     );
 
+
     joystick2.y()
+    .onTrue(
+      Commands.run(
+          () -> {
+              shooter1.set(0.0);
+              shooter2.set(0.0);
+              shooter3.set(0.0);
+              shooter4.set(0.0);
+          })
+    )
     .whileTrue(
       Eve.shoot(shooter1, shooter2, shooter3, shooter4)
+    );
+
+    joystick2.b()
+    .onTrue(
+      Commands.run(
+          () -> {
+              shooterFeed.set(0.0);
+          }
+      ).withTimeout(0.0)
+    )
+    .whileTrue(
+      Eve.shooterFeed(shooterFeed)
+    );
+
+    joystick2.leftBumper()
+    .onTrue(
+      Commands.run(
+        () -> {
+          intakeAngle.set(0.0);
+        }
+      )
+    )
+    .whileTrue(
+      Eve.intakeDown(intakeAngle)
+    );
+
+    joystick2.rightBumper()
+    .onTrue(
+      Commands.run(
+        () -> {
+          intakeAngle.set(0.0);
+        }
+      )
+    )
+    // .onFalse(
+    //   Commands.run(
+    //     intakeAngle.
+    //   )
+    // )
+    .whileTrue(
+      Eve.intakeUp(intakeAngle)
     );
 
     drivetrain.registerTelemetry(logger::telemeterize);
   }
 
-  AnalogPotentiometer pot;
 
   public RobotContainer() {
     NamedCommands.registerCommand("shoot", Eve.shoot(shooter1, shooter2, shooter3, shooter4));
@@ -109,7 +200,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("shootFeed", Eve.shooterFeedAuto(shooterFeed));
     
     configureBindings();
-    pot = new AnalogPotentiometer(3, 270, -64);
+    
   }
 
   public Command getAutonomousCommand() {

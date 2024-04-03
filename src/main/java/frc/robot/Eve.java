@@ -76,36 +76,23 @@ public class Eve {
         return Commands.sequence(
         Commands.run(
           () -> {
-              shooter1.set(0.0);
-              shooter2.set(0.0);
-              shooter3.set(0.0);
-              shooter4.set(0.0);
-          }).withTimeout(0.0),
-        Commands.run(
-          () -> {
               shooter1.set(0.8);
               shooter2.set(-0.8);
-              shooter3.set(0.8);
-              shooter4.set(-0.8);
-          }).withTimeout(3.0),
-        Commands.run(
-          () -> {
-              shooter1.set(0.0);
-              shooter2.set(0.0);
-          }).withTimeout(0.0)).withName("shoot");
+              shooter3.set(-0.8);
+              shooter4.set(0.8);
+          })).withName("shoot");
   }
 
   public static Command startShoot(TalonFX shooter1, TalonFX shooter2, TalonFX shooter3,
       TalonFX shooter4) {
-        return Commands.sequence(
-        Commands.run(
+        return Commands.run(
           () -> {
-              shooter1.set(0.8);
-              shooter2.set(-0.8);
-              shooter3.set(0.8);
-              shooter4.set(-0.8);
+              shooter1.set(0.2);
+              shooter2.set(-0.2);
+              shooter3.set(-0.2);
+              shooter4.set(0.2);
               print("Starting Shooter");
-          }).withTimeout(0.1)).withName("shootStart");
+          }).withName("shootStart");
   }
 
   public static Command endShoot(TalonFX shooter1, TalonFX shooter2, TalonFX shooter3,
@@ -145,49 +132,30 @@ public class Eve {
     public static Command shooterFeed(TalonFX shooterFeed) {
             
         return Commands.sequence(
+        
         Commands.run(
           () -> {
-              shooterFeed.set(0.0);
-          }),
-        Commands.run(
-          () -> {
-              shooterFeed.set(0.8);
+              shooterFeed.set(0.2);
           }));
   }
 
   public static Command intakeDown(TalonFX intakeAngle) {
             
         return Commands.sequence(
+        
         Commands.run(
           () -> {
-              intakeAngle.set(0.0);
-          }
-        ),
-        Commands.run(
-          () -> {
-              intakeAngle.set(-0.8);
-          }).withTimeout(3.0),
-        Commands.run(
-          () -> {
-              intakeAngle.set(0.0);
-          }).withTimeout(0.0)).withName("intakeDown");
+              intakeAngle.set(-0.2);
+          })).withName("intakeDown");
   }
 
   public static Command intakeUp(TalonFX intakeAngle) {
             
         return Commands.sequence(
+        
         Commands.run(
           () -> {
-              intakeAngle.set(0.0);
-          }
-        ),
-        Commands.run(
-          () -> {
-              intakeAngle.set(0.8);
-          }),//.withTimeout(3.0),
-        Commands.run(
-          () -> {
-              intakeAngle.set(0.0);
+              intakeAngle.set(0.1);
           }));//.withTimeout(0.0));
   }
 
@@ -196,13 +164,7 @@ public class Eve {
         return Commands.sequence(
         Commands.run(
           () -> {
-            print("Starting intake");
-              intake1.set(0.0);
-          }),
-        Commands.run(
-          () -> {
-              intake1.set(0.8);
-              print("Starting intake");
+              intake1.set(0.1);
           }));
   }
 
@@ -211,15 +173,28 @@ public class Eve {
         return Commands.sequence(
         Commands.run(
           () -> {
-              shooterAngle.set(0.0);
               while (pot.get() < targetAngle) {
-                shooterAngle.set(0.4);
+                
+                shooterAngle.set(0.2);
               }
-          }),
-         Commands.run(
-                  () -> {
-              shooterAngle.set(0.0);
-              
+          })).withName("shootAngle");
+  }
+
+  public static Command shootAngle(TalonFX shooterAngle) {
+            
+        return Commands.sequence(
+        Commands.run(
+          () -> {
+              shooterAngle.set(0.1);
+          })).withName("shootAngle");
+  }
+
+  public static Command shootAngleDown(TalonFX shooterAngle) {
+            
+        return Commands.sequence(
+        Commands.run(
+          () -> {
+              shooterAngle.set(-0.1);
           })).withName("shootAngle");
   }
 
