@@ -18,6 +18,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "intakeIn"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Close 2nd Note Get"

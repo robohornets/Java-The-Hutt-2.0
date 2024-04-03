@@ -83,9 +83,9 @@ public class Eve {
           }).withTimeout(0.0),
         Commands.run(
           () -> {
-              shooter1.set(-0.8);
+              shooter1.set(0.8);
               shooter2.set(-0.8);
-              shooter3.set(-0.8);
+              shooter3.set(0.8);
               shooter4.set(-0.8);
           }).withTimeout(3.0),
         Commands.run(
@@ -100,9 +100,9 @@ public class Eve {
         return Commands.sequence(
         Commands.run(
           () -> {
-              shooter1.set(-0.8);
+              shooter1.set(0.8);
               shooter2.set(-0.8);
-              shooter3.set(-0.8);
+              shooter3.set(0.8);
               shooter4.set(-0.8);
               print("Starting Shooter");
           }).withTimeout(0.1)).withName("shootStart");
@@ -118,7 +118,7 @@ public class Eve {
               shooter3.set(0.0);
               shooter4.set(0.0);
               print("Ending Shooter");
-          }).withTimeout(0.0)).withName("shootEnd");
+          }).withTimeout(0.1)).withName("shootEnd");
   }
 
   public static Command shooterFeedAuto(TalonFX shooterFeed) {
@@ -191,26 +191,19 @@ public class Eve {
           }));//.withTimeout(0.0));
   }
 
-    public static Command intakeIn(TalonFX intake1, TalonFX intake2) {
+    public static Command intakeIn(TalonFX intake1) {
             
         return Commands.sequence(
         Commands.run(
           () -> {
             print("Starting intake");
               intake1.set(0.0);
-              intake2.set(0.0);
-          }).withTimeout(0.0),
+          }),
         Commands.run(
           () -> {
               intake1.set(0.8);
-              intake2.set(0.8);
-          }).withTimeout(2.0),
-        Commands.run(
-          () -> {
-              intake1.set(0.0);
-              intake2.set(0.0);
-              print("Intake done");
-          }).withTimeout(0.0));
+              print("Starting intake");
+          }));
   }
 
   public static Command shootAnglePotentiometer(TalonFX shooterAngle, Double targetAngle, AnalogPotentiometer pot) {

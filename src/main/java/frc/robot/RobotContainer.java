@@ -39,7 +39,7 @@ public class RobotContainer {
 
   public static TalonFX intakeAngle = new TalonFX(26);
   public static TalonFX intake1 = new TalonFX(27);
-  public static TalonFX intake2 = new TalonFX(28);
+  // public static TalonFX intake2 = new TalonFX(28);
 
 
   public static Command shootCommand = Eve.shoot(shooter1, shooter2, shooter3, shooter4);
@@ -105,7 +105,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("shoot", Eve.shoot(shooter1, shooter2, shooter3, shooter4));
     NamedCommands.registerCommand("shootStart", Eve.startShoot(shooter1, shooter2, shooter3, shooter4));
     NamedCommands.registerCommand("shootEnd", Eve.endShoot(shooter1, shooter2, shooter3, shooter4));
-    NamedCommands.registerCommand("runIntake", Eve.intakeIn(intake1, intake2));
+    NamedCommands.registerCommand("runIntake", Eve.intakeIn(intake1));
     NamedCommands.registerCommand("shootFeed", Eve.shooterFeedAuto(shooterFeed));
     
     configureBindings();
