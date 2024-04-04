@@ -9,12 +9,14 @@ import java.util.Optional;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.PowerDistribution;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -33,8 +35,14 @@ public class Robot extends TimedRobot {
 
   Optional<Alliance> ally = DriverStation.getAlliance();
 
+  PowerDistribution pdh = new PowerDistribution();
+
+  public static AnalogPotentiometer pot = new AnalogPotentiometer(0, 270, -64);
+
   @Override
   public void robotInit() {
+    pdh.clearStickyFaults();
+
     m_robotContainer = new RobotContainer();
 
     m_robotContainer.drivetrain.getDaqThread().setThreadPriority(99);
@@ -54,6 +62,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
 
+    System.out.println(pot.get());
     /**
      * This example of adding Limelight is very simple and may not be sufficient for on-field use.
      * Users typically need to provide a standard deviation that scales with the distance to target
