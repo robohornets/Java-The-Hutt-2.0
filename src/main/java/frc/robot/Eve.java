@@ -74,15 +74,16 @@ public class Eve {
     java.lang.System.out.println(content);
   }
 
+  // Shooting Commands
   public static Command shoot(TalonFX shooter1, TalonFX shooter2, TalonFX shooter3,
     TalonFX shooter4) {  
     return Commands.sequence(
       Commands.run(
         () -> {
-          shooter1.set(0.8);
-          shooter2.set(-0.8);
-          shooter3.set(-0.8);
-          shooter4.set(0.8);
+          	shooter1.set(Variables.shooterSpeed);
+			shooter2.set(-Variables.shooterSpeed);
+			shooter3.set(-Variables.shooterSpeed);
+			shooter4.set(Variables.shooterSpeed);
         }
       )
     ).withName("shoot");
@@ -90,15 +91,16 @@ public class Eve {
 
   public static Command startShoot(TalonFX shooter1, TalonFX shooter2, TalonFX shooter3,
       TalonFX shooter4) {
-    return Commands.run(
+    return Commands.sequence(
+        Commands.run(
         () -> {
-            shooter1.set(0.2);
-            shooter2.set(-0.2);
-            shooter3.set(-0.2);
-            shooter4.set(0.2);
+            shooter1.set(Variables.shooterSpeed);
+            shooter2.set(-Variables.shooterSpeed);
+            shooter3.set(-Variables.shooterSpeed);
+            shooter4.set(Variables.shooterSpeed);
             print("Starting Shooter");
         }
-	).withName("shootStart");
+	).withTimeout(0.1));
   }
 
 public static Command endShoot(TalonFX shooter1, TalonFX shooter2, TalonFX shooter3, TalonFX shooter4) {
@@ -111,7 +113,22 @@ public static Command endShoot(TalonFX shooter1, TalonFX shooter2, TalonFX shoot
             shooter4.set(0.0);
             print("Ending Shooter");
         }
-	).withTimeout(0.1)).withName("shootEnd");
+	).withTimeout(0.1));
+}
+
+public static Command fullIntake(TalonFX shooterFeed, TalonFX intakeAngle, TalonFX intake1, TalonFX shooterAngle, AnalogPotentiometer pot) {
+	return Commands.sequence(
+		Commands.run(
+			() -> {
+				intakeDown(intakeAngle);
+			}
+		),
+		Commands.run(
+			()-> {
+				intakeIn(intake1);
+			}
+		)
+	);
 }
 
 public static Command shooterFeedAuto(TalonFX shooterFeed) {
@@ -134,6 +151,7 @@ public static Command shooterFeedAuto(TalonFX shooterFeed) {
 		).withTimeout(0.0)
 	).withName("shootFeed");
 }
+
 // intake in until note hits green
 // switch override true 
 public static boolean limitSwitchTripped = false;
@@ -167,25 +185,57 @@ public static boolean limitSwitchTripped = false;
   }
 
   // Intake Commands
-  	public static Command intakeDown(TalonFX intakeAngle) {   
-		return Commands.sequence(
-			Commands.run(
-				() -> {
-				intakeAngle.set(-0.2);
-				}
-			)
-		).withName("intakeDown");
-	}
+  	// public static Command intakeDown(TalonFX intakeAngle) {   
+	// 	return Commands.sequence(
+	// 		Commands.run(
+	// 			() -> {
+	// 			intakeAngle.set(-0.2);
+	// 			}
+	// 		)
+	// 	).withName("intakeDown");
+	// }
 
-  public static Command intakeUp(TalonFX intakeAngle) {      
-    return Commands.sequence(  
+	public static Command intakeDown(TalonFX intakeAngle) { 
+    return Commands.sequence(
       Commands.run(
         () -> {
-          intakeAngle.set(0.3);
+			if(Robot.limitSwitch.get() || Robot.intakeDownLimit.get()) {
+            	intakeAngle.set(-0.2);
+			}
+			else {
+				intakeAngle.set(0.0);
+			}
         }
       )
     );
   }
+
+//   public static Command intakeUp(TalonFX intakeAngle) {      
+//     return Commands.sequence(  
+//       Commands.run(
+//         () -> {
+//           intakeAngle.set(0.3);
+//         }
+//       )
+//     );
+//   }
+
+public static Command intakeUp(TalonFX intakeAngle) { 
+    return Commands.sequence(
+      Commands.run(
+        () -> {
+			if(Robot.limitSwitch.get() || Robot.intakeUpLimit.get()) {
+            	intakeAngle.set(0.3);
+			}
+			else {
+				intakeAngle.set(0.0);
+			}
+        }
+      )
+    );
+  }
+
+  
 
   public static Command intakeIn(TalonFX intake1) { 
     return Commands.sequence(
@@ -202,25 +252,6 @@ public static boolean limitSwitchTripped = false;
     return Commands.sequence(
       Commands.run(
         () -> {
-          // if(pot.get() > 85.0 && pot.get() < 140.0) {
-			    //   if(Math.abs(pot.get()-targetAngle) <= 3) {
-				  //     shooterAngle.set(0.0);
-			    //   }
-			    //   else {
-          //     java.lang.System.out.println("Potentiometer: " + pot.get() + " Target Angle: " + targetAngle);
-          //     if(pot.get()-targetAngle > 0) {
-          //       java.lang.System.out.println("Speed is -0.25");
-					//       shooterAngle.set(-0.25);
-				  //     } else {
-          //       java.lang.System.out.println("Speed is 0.25");
-					//       shooterAngle.set(0.25);
-				  //     }
-		      // 	}
-		      // }
-		      // else {
-			    //   shooterAngle.set(0.0);
-		      // }
-
           if(Math.abs(pot.get()-targetAngle) <= 3) {
 				      shooterAngle.set(0.0);
 			      }

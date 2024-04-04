@@ -81,7 +81,7 @@ public class RobotContainer {
     joystick.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
     // Run Flywheels
-    joystick2.leftTrigger()
+    joystick2.rightTrigger()
     .onTrue(
       Commands.run(
           () -> {
@@ -96,7 +96,7 @@ public class RobotContainer {
       Eve.shoot(shooter1, shooter2, shooter3, shooter4)
     );
 
-  // push note from green wheels into the fly wheels to shoot
+  // Push note from green wheels into the fly wheels to shoot
     joystick2.y()
     .onTrue(
       Commands.sequence(
@@ -111,6 +111,7 @@ public class RobotContainer {
       Eve.shooterFeed(shooterFeed, true)
     );
 
+    // Run shooter feed in reverse
     joystick2.b()
     .onTrue(
       Commands.sequence(
@@ -125,7 +126,8 @@ public class RobotContainer {
       Eve.shooterFeedReverse(shooterFeed)
     );
 
-
+    
+    // Preset shooter angles
     joystick2.povUp()
     .onTrue(
       Commands.run(
@@ -135,13 +137,10 @@ public class RobotContainer {
       )
     )
     .whileTrue(
-      //Eve.shootAngleTime(shooterAngle)
-      //Eve.shootAnglePotentiometer(shooterAngle, 20.0, Robot.pot)
-      //Eve.shootAngle(shooterAngle)
-      Eve.shootAnglePotentiometer(shooterAngle, 10.0, Robot.pot)
+      Eve.shootAnglePotentiometer(shooterAngle, 85.0, Robot.pot)
     );
 
-    joystick2.rightTrigger()
+    joystick2.povDown()
     .onTrue(
       Commands.run(
         () -> {
@@ -150,22 +149,70 @@ public class RobotContainer {
       )
     )
     .whileTrue(
-      //Eve.shootAngleTime(shooterAngle)
-      Eve.shootAnglePotentiometer(shooterAngle, 130.0, Robot.pot)
-      //Eve.shootAngleDown(shooterAngle)
+      Eve.shootAnglePotentiometer(shooterAngle, 144.0, Robot.pot)
     );
 
-    joystick2.a()
+    joystick2.povLeft()
     .onTrue(
       Commands.run(
         () -> {
-          intake1.set(0.0);
+          shooterAngle.set(0.0);
         }
-        )
+      )
     )
     .whileTrue(
-      Eve.intakeIn(intake1)
+      Eve.shootAnglePotentiometer(shooterAngle, 105.0, Robot.pot)
     );
+
+    // joystick2.rightTrigger()
+    // .onTrue(
+    //   Commands.run(
+    //     () -> {
+    //       shooterAngle.set(0.0);
+    //     }
+    //   )
+    // )
+    // .whileTrue(
+    //   //Eve.shootAngleTime(shooterAngle)
+    //   Eve.shootAnglePotentiometer(shooterAngle, 130.0, Robot.pot)
+    //   //Eve.shootAngleDown(shooterAngle)
+    // );
+
+    joystick2.a()
+    .onTrue(
+      Commands.sequence(
+        Commands.run(
+        () -> {
+          shooterFeed.set(0.0);
+          intakeAngle.set(0.0);
+          intake1.set(0.0);
+          shooterAngle.set(0.0);
+        }
+        ),
+          Commands.run(
+			() -> {
+				Eve.intakeDown(intakeAngle);
+				intake1.set(0.2);
+				Eve.shooterFeed(shooterFeed, Eve.limitSwitchTripped);
+				Eve.shootAnglePotentiometer(shooterAngle, 105.0, Robot.pot);
+			}
+		)
+      )
+    )
+    .whileTrue(
+      Eve.fullIntake(shooterFeed, intakeAngle, intake1, shooterAngle, Robot.pot)
+    )
+    .onFalse(
+      Commands.run(
+        () -> {
+          shooterFeed.set(0.0);
+          intakeAngle.set(0.0);
+          intake1.set(0.0);
+          shooterAngle.set(0.0);
+        }
+      )
+    )
+    ;
 
     joystick2.x()
     .onTrue(
@@ -235,11 +282,20 @@ public class RobotContainer {
 
 
   public RobotContainer() {
+    //NamedCommands.registerCommand("shoot", Eve.shoot(shooter1, shooter2, shooter3, shooter4));
+    NamedCommands.registerCommand("startShoot", Eve.startShoot(shooter1, shooter2, shooter3, shooter4));
+    NamedCommands.registerCommand("endShoot", Eve.endShoot(shooter1, shooter2, shooter3, shooter4));
+    NamedCommands.registerCommand("intakeIn", Eve.intakeIn(intake1));
+    //NamedCommands.registerCommand("shootFeed", Eve.shooterFeedAuto(shooterFeed));
+    NamedCommands.registerCommand("intakeDown", Eve.intakeDown(intakeAngle).unless(null));
+    NamedCommands.registerCommand("intakeUp", Eve.intakeUp(intakeAngle));
+    NamedCommands.registerCommand("shooterFeed", Eve.shooterFeed(intakeAngle, false));
+    NamedCommands.registerCommand("shooterFeedFlywheels", Eve.shooterFeed(intakeAngle, true));
     NamedCommands.registerCommand("shoot", Eve.shoot(shooter1, shooter2, shooter3, shooter4));
-    NamedCommands.registerCommand("shootStart", Eve.startShoot(shooter1, shooter2, shooter3, shooter4));
-    NamedCommands.registerCommand("shootEnd", Eve.endShoot(shooter1, shooter2, shooter3, shooter4));
-    NamedCommands.registerCommand("runIntake", Eve.intakeIn(intake1));
-    NamedCommands.registerCommand("shootFeed", Eve.shooterFeedAuto(shooterFeed));
+    NamedCommands.registerCommand("shootAngleIntake", Eve.shootAnglePotentiometer(shooterAngle, 105.0, Robot.pot));
+    NamedCommands.registerCommand("shootNoteCenter", Eve.shootAnglePotentiometer(shooterAngle, 105.0, Robot.pot));
+    NamedCommands.registerCommand("shootNoteLeft", Eve.shootAnglePotentiometer(shooterAngle, 105.0, Robot.pot));
+    NamedCommands.registerCommand("shootNoteRight", Eve.shootAnglePotentiometer(shooterAngle, 105.0, Robot.pot));
     
     configureBindings();
     

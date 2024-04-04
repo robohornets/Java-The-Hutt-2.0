@@ -41,6 +41,8 @@ public class Robot extends TimedRobot {
 
   public static AnalogPotentiometer pot = new AnalogPotentiometer(0, 270, -64);
   public static DigitalInput limitSwitch = new DigitalInput(0);
+  public static DigitalInput intakeDownLimit = new DigitalInput(1);
+  public static DigitalInput intakeUpLimit = new DigitalInput(2);
 
   @Override
   public void robotInit() {
