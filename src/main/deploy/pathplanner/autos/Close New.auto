@@ -32,12 +32,6 @@
                 "data": {
                   "name": "startShoot"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": null
-                }
               }
             ]
           }
