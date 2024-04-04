@@ -136,11 +136,16 @@ public static Command shooterFeedAuto(TalonFX shooterFeed) {
 }
 // intake in until note hits green
 // switch override true 
+public static boolean limitSwitchTripped = false;
   public static Command shooterFeed(TalonFX shooterFeed, boolean overrideSwitch) { 
     return Commands.sequence(
       Commands.run(
         () -> {
-			if(Robot.limitSwitch.get() || overrideSwitch) {
+          if(overrideSwitch) {
+            limitSwitchTripped = true;
+          }
+
+			if(Robot.limitSwitch.get() || limitSwitchTripped) {
             	shooterFeed.set(0.25);
 			}
 			else {
@@ -186,7 +191,7 @@ public static Command shooterFeedAuto(TalonFX shooterFeed) {
     return Commands.sequence(
       Commands.run(
         () -> {
-          intake1.set(0.5);
+          intake1.set(0.3);
         }
       )
     );
@@ -197,21 +202,35 @@ public static Command shooterFeedAuto(TalonFX shooterFeed) {
     return Commands.sequence(
       Commands.run(
         () -> {
-          if(pot.get() > 82 && pot.get() < 144) {
-			if(!(Math.abs(pot.get()-targetAngle) <= 3)) {
-				if(pot.get()-targetAngle > 0) {
-					shooterAngle.set(0.25);
-				} else {
-					shooterAngle.set(-0.25);
-				}
-			}
-			else {
-				shooterAngle.set(0.0);
-			}
-		  }
-		  else {
-			shooterAngle.set(0.0);
-		  }
+          // if(pot.get() > 85.0 && pot.get() < 140.0) {
+			    //   if(Math.abs(pot.get()-targetAngle) <= 3) {
+				  //     shooterAngle.set(0.0);
+			    //   }
+			    //   else {
+          //     java.lang.System.out.println("Potentiometer: " + pot.get() + " Target Angle: " + targetAngle);
+          //     if(pot.get()-targetAngle > 0) {
+          //       java.lang.System.out.println("Speed is -0.25");
+					//       shooterAngle.set(-0.25);
+				  //     } else {
+          //       java.lang.System.out.println("Speed is 0.25");
+					//       shooterAngle.set(0.25);
+				  //     }
+		      // 	}
+		      // }
+		      // else {
+			    //   shooterAngle.set(0.0);
+		      // }
+
+          if(Math.abs(pot.get()-targetAngle) <= 3) {
+				      shooterAngle.set(0.0);
+			      }
+            else {
+              if(pot.get()-targetAngle >= 0 && pot.get() > 85) {
+                shooterAngle.set(-0.25);
+              } else if(pot.get()-targetAngle >= 0 && pot.get() < 140) {
+                shooterAngle.set(0.25);
+              }
+            }
         }
       )
     ).withName("shootAngle");

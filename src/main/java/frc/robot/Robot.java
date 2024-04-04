@@ -39,7 +39,7 @@ public class Robot extends TimedRobot {
   PowerDistribution pdh = new PowerDistribution();
 
   public static AnalogPotentiometer pot = new AnalogPotentiometer(0, 270, -64);
-  public static DigitalInput limitSwitch = new DigitalInput(1);
+  public static DigitalInput limitSwitch = new DigitalInput(0);
 
   @Override
   public void robotInit() {
@@ -63,8 +63,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    System.out.println(limitSwitch.get());
 
-    System.out.println(pot.get());
+    //System.out.println(pot.get());
     /**
      * This example of adding Limelight is very simple and may not be sufficient for on-field use.
      * Users typically need to provide a standard deviation that scales with the distance to target

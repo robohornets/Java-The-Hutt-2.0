@@ -104,11 +104,6 @@ public class RobotContainer {
         () -> {
           shooterFeed.set(0.0);
           }
-        ),
-        Commands.run(
-        () -> {
-          shooterFeed.set(0.3);
-          }
         )
       )
       
@@ -131,7 +126,7 @@ public class RobotContainer {
     );
 
 
-    joystick2.leftTrigger()
+    joystick2.povUp()
     .onTrue(
       Commands.run(
         () -> {
@@ -142,7 +137,8 @@ public class RobotContainer {
     .whileTrue(
       //Eve.shootAngleTime(shooterAngle)
       //Eve.shootAnglePotentiometer(shooterAngle, 20.0, Robot.pot)
-      Eve.shootAngle(shooterAngle)
+      //Eve.shootAngle(shooterAngle)
+      Eve.shootAnglePotentiometer(shooterAngle, 10.0, Robot.pot)
     );
 
     joystick2.rightTrigger()
@@ -155,7 +151,7 @@ public class RobotContainer {
     )
     .whileTrue(
       //Eve.shootAngleTime(shooterAngle)
-      Eve.shootAnglePotentiometer(shooterAngle, 120.0, Robot.pot)
+      Eve.shootAnglePotentiometer(shooterAngle, 130.0, Robot.pot)
       //Eve.shootAngleDown(shooterAngle)
     );
 
@@ -180,23 +176,30 @@ public class RobotContainer {
       )
     )
     .whileTrue(
-      Eve.shooterFeed(shooterFeed, true)
+      Eve.shooterFeed(shooterFeed, false)
+    )
+    .onFalse(
+      Commands.run(
+        () -> {
+          Eve.limitSwitchTripped = false;
+        }
+      )
     );
 
 
     
 
-    joystick2.b()
-    .onTrue(
-      Commands.run(
-          () -> {
-              shooterFeed.set(0.0);
-          }
-      ).withTimeout(0.0)
-    )
-    .whileTrue(
-      Eve.shooterFeed(shooterFeed, true)
-    );
+    // joystick2.b()
+    // .onTrue(
+    //   Commands.run(
+    //       () -> {
+    //           shooterFeed.set(0.0);
+    //       }
+    //   ).withTimeout(0.0)
+    // )
+    // .whileTrue(
+    //   Eve.shooterFeed(shooterFeed, true)
+    // );
 
     joystick2.leftBumper()
     .onTrue(
