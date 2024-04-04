@@ -80,6 +80,57 @@ public class RobotContainer {
     // reset the field-centric heading on y button press
     joystick.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
+    // Run Flywheels
+    joystick2.leftTrigger()
+    .onTrue(
+      Commands.run(
+          () -> {
+              shooter1.set(0.0);
+              shooter2.set(0.0);
+              shooter3.set(0.0);
+              shooter4.set(0.0);
+          }
+        )
+    )
+    .whileTrue(
+      Eve.shoot(shooter1, shooter2, shooter3, shooter4)
+    );
+
+  // push note from green wheels into the fly wheels to shoot
+    joystick2.y()
+    .onTrue(
+      Commands.sequence(
+        Commands.run(
+        () -> {
+          shooterFeed.set(0.0);
+          }
+        ),
+        Commands.run(
+        () -> {
+          shooterFeed.set(0.3);
+          }
+        )
+      )
+      
+    ).whileTrue(
+      Eve.shooterFeed(shooterFeed, true)
+    );
+
+    joystick2.b()
+    .onTrue(
+      Commands.sequence(
+        Commands.run(
+        () -> {
+          shooterFeed.set(0.0);
+          }
+        )
+      )
+      
+    ).whileTrue(
+      Eve.shooterFeedReverse(shooterFeed)
+    );
+
+
     joystick2.leftTrigger()
     .onTrue(
       Commands.run(
@@ -104,8 +155,8 @@ public class RobotContainer {
     )
     .whileTrue(
       //Eve.shootAngleTime(shooterAngle)
-      //Eve.shootAnglePotentiometer(shooterAngle, 20.0, Robot.pot)
-      Eve.shootAngleDown(shooterAngle)
+      Eve.shootAnglePotentiometer(shooterAngle, 120.0, Robot.pot)
+      //Eve.shootAngleDown(shooterAngle)
     );
 
     joystick2.a()
@@ -129,23 +180,11 @@ public class RobotContainer {
       )
     )
     .whileTrue(
-      Eve.shooterFeed(shooterFeed)
+      Eve.shooterFeed(shooterFeed, true)
     );
 
 
-    joystick2.y()
-    .onTrue(
-      Commands.run(
-          () -> {
-              shooter1.set(0.0);
-              shooter2.set(0.0);
-              shooter3.set(0.0);
-              shooter4.set(0.0);
-          })
-    )
-    .whileTrue(
-      Eve.shoot(shooter1, shooter2, shooter3, shooter4)
-    );
+    
 
     joystick2.b()
     .onTrue(
@@ -156,7 +195,7 @@ public class RobotContainer {
       ).withTimeout(0.0)
     )
     .whileTrue(
-      Eve.shooterFeed(shooterFeed)
+      Eve.shooterFeed(shooterFeed, true)
     );
 
     joystick2.leftBumper()
