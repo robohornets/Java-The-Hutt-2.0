@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -38,6 +39,7 @@ public class Robot extends TimedRobot {
   PowerDistribution pdh = new PowerDistribution();
 
   public static AnalogPotentiometer pot = new AnalogPotentiometer(0, 270, -64);
+  public static DigitalInput limitSwitch = new DigitalInput(1);
 
   @Override
   public void robotInit() {
